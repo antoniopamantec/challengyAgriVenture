@@ -3,12 +3,14 @@ const express = require("express");
 const PORT = process.env.PORT || 3000;
 const sequelize = require("./config/database");
 require("./models/Lead");
+require("./models/Company");
 require("./models/Utilizador");
 const app = express();
+const errorHandler = require("./utils/errorsHandler");
 app.use(express.json());
-
-app.use(require("./routers/leadRoute"));
-
+app.use("/lead", require("./routers/leadRoute"));
+app.use("/company", require("./routers/companyRoute"));
+app.use(errorHandler);
 // O { force: true } apaga a tabela existente (se houver) e cria uma nova
 sequelize
   .sync({ force: true })

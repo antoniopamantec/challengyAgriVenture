@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-
+const Company = require("../models/Company");
 const Lead = sequelize.define(
   "Lead",
   {
@@ -13,6 +13,9 @@ const Lead = sequelize.define(
     name: {
       type: DataTypes.STRING(60),
       allowNull: false,
+      unique: {
+        msg: "Já existe lead com este nome!",
+      },
       validate: {
         notEmpty: {
           msg: "O nome é obrigatório.",
@@ -44,24 +47,41 @@ const Lead = sequelize.define(
         },
       },
     },
-    company: {
-      type: DataTypes.STRING(60),
+    companyId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: Company,
+        key: "id",
+      },
       validate: {
         notEmpty: {
-          msg: "A empresa é obrigatório.",
+          msg: "Id company não pode ser vazio!",
         },
-        len: {
-          args: [2, 60],
-          msg: "A empresa deve ter entre 2 e 60 caracteres.",
+        notNull: {
+          msg: "Id company não pode ser nullo!",
+        },
+        async companyExist(value) {
+          const codigo = await Company.findByPk(value);
+          if (!codigo) {
+            throw new Error(` Company id ${value} does  not exist`);
+          }
         },
       },
     },
     status: {
       type: DataTypes.STRING(60),
+      defaultValue: "New",
       allowNull: false,
+      validate: {
+        isIn: {
+          args: [["New", "Contacted", "Qualified", "Lost"]],
+          msg: "Status must be New, Contacted, Qualified, or Lost",
+        },
+      },
     },
   },
+
   {
     tableName: "Lead",
     timestamps: true,
@@ -69,4 +89,8 @@ const Lead = sequelize.define(
   },
 );
 
+Lead.belongsTo(Company, {
+  foreignKey: "companyId",
+  as: "company",
+});
 module.exports = Lead;
