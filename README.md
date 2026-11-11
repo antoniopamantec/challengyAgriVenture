@@ -1,4 +1,4 @@
-API - Agrenture Challengy
+API - Challenge Angry Ventures
 Descrição
 Esta API foi desenvolvida em Node.js, com o objetivo de disponibilizar serviços e funcionalidades através de endpoints REST.
 
