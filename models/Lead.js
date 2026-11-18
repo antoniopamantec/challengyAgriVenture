@@ -83,7 +83,7 @@ const Lead = sequelize.define(
   },
 
   {
-    tableName: "Lead",
+    tableName: "lead",
     timestamps: true,
     underscored: true,
   },

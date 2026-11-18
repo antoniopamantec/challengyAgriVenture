@@ -1,0 +1,10 @@
+const route = require("express").Router();
+const utilizador = require("../models/Utilizador");
+const controllerUtilizador = require("../controllers/utilizadorController");
+const jwt = require("jsonwebtoken");
+require("dotenv").config({ quiet: true });
+route.post("/", controllerUtilizador.registerUtilizador);
+route.post("/login", controllerUtilizador.login);
+route.get("/current", controllerUtilizador.current);
+route.get("/logout", controllerUtilizador.logout);
+module.exports = route;

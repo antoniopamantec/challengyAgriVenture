@@ -10,25 +10,25 @@ const Utilizador = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    refreshToken: {
+    refresh_token: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    accessToken: {
+    access_token: {
       type: DataTypes.STRING,
       allowNull: true,
     },
 
-    MFAEnable: {
+    m_f_a_enable: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
       allowNull: true,
     },
-    MFASecret: {
+    m_f_a_secret: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    nome: {
+    name: {
       type: DataTypes.STRING(60),
       allowNull: false,
       unique: true,
@@ -51,7 +51,13 @@ const Utilizador = sequelize.define(
       validate: {
         /* unique: {
           msg: "Este funcionario já existe na base de dados",
-        },*/
+        },*/ isEmail: {
+          msg: "Informe um email válido.",
+        },
+        len: {
+          args: [5, 254],
+          msg: "O email deve ter entre 5 e 254 caracteres.",
+        },
         notNull: {
           msg: "Email utilizador não pode ser nullo!",
         },
@@ -61,9 +67,9 @@ const Utilizador = sequelize.define(
       },
     },
     password: {
-      type: DataTypes.STRING(60),
+      type: DataTypes.STRING,
       allowNull: false,
-      unique: false,
+      unique: true,
       validate: {
         notNull: {
           msg: "Passwor  não pode ser nullo!",
@@ -79,7 +85,7 @@ const Utilizador = sequelize.define(
     },
   },
   {
-    tableName: "utilizadores",
+    tableName: "utilizador",
     timestamps: true,
     underscored: true,
   },

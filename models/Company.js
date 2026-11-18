@@ -6,43 +6,51 @@ const Company = sequelize.define(
   {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
+      autoIncrement: true,
     },
-    url: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+
     name: {
       type: DataTypes.STRING(60),
       allowNull: false,
+      unique: {
+        msg: "Já existe lead com este nome!",
+      },
       validate: {
-        /* unique: {
-          msg: "Este departamento já existe na base de dados!",
-        },*/
-        notNull: {
-          msg: "Company não pode ser null!",
-        },
         notEmpty: {
-          msg: "Company não pode ser vazio!",
+          msg: "O nome é obrigatório.",
+        },
+        len: {
+          args: [2, 60],
+          msg: "O nome deve ter entre 2 e 60 caracteres.",
         },
       },
     },
+
     email: {
-      type: DataTypes.STRING(60),
+      type: DataTypes.STRING(254),
       allowNull: false,
+      unique: {
+        name: "unique_lead_email",
+        msg: "Este email já está cadastrado.",
+      },
       validate: {
-        /* unique: {
-          msg: "Este departamento já existe na base de dados!",
-        },*/
-        notNull: {
-          msg: "Email company não pode ser null!",
-        },
         notEmpty: {
-          msg: "Email company não pode ser vazio!",
+          msg: "O email é obrigatório.",
+        },
+        isEmail: {
+          msg: "Informe um email válido.",
+        },
+        len: {
+          args: [5, 254],
+          msg: "O email deve ter entre 5 e 254 caracteres.",
         },
       },
+    },
+
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   },
   {

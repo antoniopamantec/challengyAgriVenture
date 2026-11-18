@@ -1,20 +1,21 @@
 const { ValidationError, UniqueConstraintError } = require("sequelize");
 const Company = require("../models/Company");
+const Lead = require("../models/Lead");
 const asyncHandler = require("../utils/asincHandler");
 
-exports.createCompany = async (req, res, next) => {
+exports.createCompany = asyncHandler(async (req, res, next) => {
   try {
     const newCompany = await Company.create(req.body);
     return res.status(201).json(newCompany);
   } catch (error) {
     next(error);
   }
-};
+});
 
 exports.getCompany = async (req, res, next) => {
   try {
     const companys = await Company.findAll();
-    return res.status(200).json({ companys });
+    return res.status(200).json(companys);
   } catch (error) {
     next(error);
   }
@@ -54,14 +55,26 @@ exports.updateCompany = async (req, res, next) => {
 
 exports.deletedCompany = async (req, res, next) => {
   try {
-    const deleteCount = await Company.destroy({
+    const company = Company.findByPk({ where: { id: req.params.id } });
+
+    if (!company) {
+      return res.status(404).json({ error: "Company not found!" });
+    }
+
+    const leadCompany = Lead.findAll({ where: { companyID: Lead.id } });
+    if (leadCompany) {
+      return res.status(402).json({ error: "This company is in used!" });
+    }
+    await Company.destroy();
+    return res.status(201).json({ message: "Delete successfulll!" });
+    /*const deleteCount = await Company.destroy({
       where: { id: req.params.id },
     });
     if (deleteCount === 0) {
       return res.status(404).json({ error: "Company not found!" });
     }
     console.log(deleteCount);
-    return res.status(201).json({ message: "Delete successfulll!" });
+    return res.status(201).json({ message: "Delete successfulll!" });*/
   } catch (error) {
     next(error);
   }

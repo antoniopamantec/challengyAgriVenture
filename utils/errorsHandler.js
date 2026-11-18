@@ -1,6 +1,7 @@
 const { ValidationError, UniqueConstraintError } = require("sequelize");
 
 const errorHandler = (error, req, res, next) => {
+  console.log(error);
   if (error instanceof UniqueConstraintError) {
     return res.status(409).json({
       error: "Conflict Error",
